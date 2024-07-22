@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using fr34kyn01535.Uconomy;
 using Rocket.API.Collections;
 using Rocket.Core.Plugins;
@@ -237,15 +238,21 @@ namespace ZaupShop
                     {
                         Asset[] array = Assets.find(EAssetType.VEHICLE);
                         Asset[] array2 = array;
-                        for (int i = 0; i < array2.Length; i++)
+                        try
                         {
-                            VehicleAsset vAsset = (VehicleAsset)array2[i];
-                            if (vAsset != null && vAsset.vehicleName != null && vAsset.vehicleName.ToLower().Contains(components[1].ToLower()))
+                            for (int i = 0; i < array2.Length; i++)
                             {
-                                // id = vAsset.id;
-                                name = vAsset.vehicleName;
-                                break;
+                                VehicleAsset vAsset = (VehicleAsset)array2[i];
+                                if (vAsset != null && vAsset.vehicleName != null && vAsset.vehicleName.ToLower().Contains(components[1].ToLower()))
+                                {
+                                    id = vAsset.id;
+                                    name = vAsset.vehicleName;
+                                    break;
+                                }
                             }
+                        }
+                        catch (Exception e)
+                        {
                         }
                     }
                     if (Assets.find(EAssetType.VEHICLE, id) == null)
@@ -344,23 +351,18 @@ namespace ZaupShop
                     return true;
             }
         }
-        public void Cost(UnturnedPlayer playerid, string[] components)
+        public void Cost(UnturnedPlayer playerid, string[] arguments)
         {
             string message;
-            if (components.Length == 0 || (components.Length == 1 && (components[0].Trim() == string.Empty || components[0].Trim() == "v")))
+            if (arguments.Length == 0 || (arguments.Length == 1 && (arguments[0].Trim() == string.Empty || arguments[0].Trim() == "v")))
             {
                 message = Instance.Translate("cost_command_usage");
                 // We are going to print how to use
                 UnturnedChat.Say(playerid, message);
                 return;
             }
-            if (components.Length == 2 && (components[0] != "v" || components[1].Trim() == string.Empty))
-            {
-                message = Instance.Translate("cost_command_usage");
-                // We are going to print how to use
-                UnturnedChat.Say(playerid, message);
-                return;
-            }
+            
+            string[] components = Parser.getComponentsFromSerial(arguments[0], '.');
             ushort id;
             switch (components[0])
             {
@@ -370,18 +372,27 @@ namespace ZaupShop
                     {
                         Asset[] array = Assets.find(EAssetType.VEHICLE);
                         Asset[] array2 = array;
-                        for (int i = 0; i < array2.Length; i++)
+                        try
                         {
-                            VehicleAsset vAsset = (VehicleAsset)array2[i];
-                            if (vAsset != null && vAsset.vehicleName != null && vAsset.vehicleName.ToLower().Contains(components[1].ToLower()))
+                            for (int i = 0; i < array2.Length; i++)
                             {
-                                id = vAsset.id;
-                                name = vAsset.vehicleName;
-                                break;
+                            
+                                VehicleAsset vAsset = (VehicleAsset)array2[i];
+                                if (vAsset != null && vAsset.vehicleName != null && vAsset.vehicleName.ToLower().Contains(components[1].ToLower()))
+                                {
+                                    id = vAsset.id;
+                                    name = vAsset.vehicleName;
+                                    break;
+                                }
                             }
                         }
+                        catch (Exception e)
+                        {
+                        }
+                        
                     }
-                    if (Assets.find(EAssetType.VEHICLE, id) == null)
+
+                    if (id == 0)
                     {
                         message = Instance.Translate("could_not_find", components[1]);
                         UnturnedChat.Say(playerid, message);
@@ -390,26 +401,26 @@ namespace ZaupShop
 
                     if (name == null && id != 0)
                     {
-                        name = ((VehicleAsset)Assets.find(EAssetType.VEHICLE, id)).vehicleName;
+                        name = Assets.find(EAssetType.VEHICLE, id).name;
                     }
                     decimal cost = Instance.ShopDB.GetVehicleCost(id);
                     message = Instance.Translate("vehicle_cost_msg", name, cost.ToString(), Uconomy.Instance.Configuration.Instance.MoneyName);
                     if (cost <= 0m)
                     {
-                        message = Instance.Translate("error_getting_cost", name);
+                        message = Instance.Translate("vehicle_not_available", name);
                     }
                     UnturnedChat.Say(playerid, message);
                     break;
                 default:
                     name = null;
-                    if (!ushort.TryParse(components[0], out id))
+                    if (!ushort.TryParse(arguments[0], out id))
                     {
                         Asset[] array = Assets.find(EAssetType.ITEM);
                         Asset[] array2 = array;
                         for (int i = 0; i < array2.Length; i++)
                         {
                             ItemAsset iAsset = (ItemAsset)array2[i];
-                            if (iAsset != null && iAsset.itemName != null && iAsset.itemName.ToLower().Contains(components[0].ToLower()))
+                            if (iAsset != null && iAsset.itemName != null && iAsset.itemName.ToLower().Contains(arguments[0].ToLower()))
                             {
                                 id = iAsset.id;
                                 name = iAsset.itemName;
@@ -419,7 +430,7 @@ namespace ZaupShop
                     }
                     if (Assets.find(EAssetType.ITEM, id) == null)
                     {
-                        message = Instance.Translate("could_not_find", components[0]);
+                        message = Instance.Translate("could_not_find", arguments[0]);
                         UnturnedChat.Say(playerid, message);
                         return;
                     }

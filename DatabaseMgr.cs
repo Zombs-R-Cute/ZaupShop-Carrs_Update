@@ -1,6 +1,5 @@
 ﻿using System;
 using fr34kyn01535.Uconomy;
-using I18N.West;
 using MySql.Data.MySqlClient;
 using Rocket.Core.Logging;
 
@@ -12,7 +11,6 @@ namespace ZaupShop
 
         internal DatabaseMgr()
         {
-            CP1250 cP1250 = new CP1250();
             CheckSchema();
         }
 

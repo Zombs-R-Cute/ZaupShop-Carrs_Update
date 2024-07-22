@@ -39,14 +39,8 @@
         <Reference Include="com.rlabrecque.steamworks.net, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <HintPath>packages\RocketModFix.Unturned.Redist.3.24.2\lib\net40\com.rlabrecque.steamworks.net.dll</HintPath>
         </Reference>
-        <Reference Include="I18N">
-          <HintPath>Libraries\I18N.dll</HintPath>
-        </Reference>
-        <Reference Include="I18N.West">
-          <HintPath>Libraries\I18N.West.dll</HintPath>
-        </Reference>
-        <Reference Include="MySql.Data">
-          <HintPath>Libraries\MySql.Data.dll</HintPath>
+        <Reference Include="MySql.Data, Version=6.9.8.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+          <HintPath>packages\ztools.other.MySql.Data.6.9.8\lib\net45\MySql.Data.dll</HintPath>
         </Reference>
         <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
           <HintPath>packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -316,15 +310,11 @@
         <Compile Include="ZaupShopConfiguration.cs" />
     </ItemGroup>
     <ItemGroup>
+      <None Include="app.config" />
       <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
-      <Content Include="Libraries\I18N.dll" />
-      <Content Include="Libraries\I18N.West.dll" />
-      <Content Include="Libraries\MySql.Data.dll" />
-      <Content Include="Libraries\System.Data.dll" />
-      <Content Include="Libraries\System.Management.dll" />
-      <Content Include="Libraries\System.Transactions.dll" />
+      <Content Include="Libraries\Uconomy.dll" />
       <Content Include="README.md" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
